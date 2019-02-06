@@ -7,13 +7,14 @@ import com.capgemini.beans.Address;
 import com.capgemini.beans.City;
 import com.capgemini.beans.Country;
 import com.capgemini.beans.Employee;
+import com.capgemini.exceptions.NameNotFoundException;
 import com.capgemini.repo.EmployeeRepo;
 import com.capgemini.repo.EmployeeRepoImpl;
 import com.capgemini.service.EmployeeServiceImpl;
 
 public class EmployeeView {
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws NameNotFoundException {
 		// TODO Auto-generated method stub
 		
 		EmployeeRepo employeeRepo=new EmployeeRepoImpl();
@@ -44,6 +45,8 @@ public class EmployeeView {
 		{
 			System.out.println(listOP.get(i));
 		}	
+		
+		employeeRepo.searchEmployee(101);
 		
 	}
 

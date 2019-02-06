@@ -5,6 +5,7 @@ import java.util.List;
 import com.capgemini.beans.Address;
 import com.capgemini.beans.Employee;
 import com.capgemini.exceptions.DuplicateIdNumberException;
+import com.capgemini.exceptions.NameNotFoundException;
 import com.capgemini.repo.EmployeeRepo;
 
 
@@ -21,13 +22,15 @@ public class EmployeeServiceImpl implements EmployeeService {
 	
 
 	@Override
-	public Employee createEmployee(int employeeID,String employeeName, Address address)  {
-		Employee employee= new Employee();
+	public Employee createEmployee(int employeeID,String employeeName, Address address) throws NameNotFoundException {
+		if(employeeName==null)
+		{
 		
-//		if(employeeRepo.searchEmployee(employeeID).getEmployeeID()==employeeID)
-//		{
-//			throw new DuplicateIdNumberException();
-//		}
+				throw new NameNotFoundException();
+			
+		}
+		
+		Employee employee= new Employee();		
 		employee.setEmployeeID(employeeID);
 		employee.setEmployeeName(employeeName);
 		employee.setAddress(address);
