@@ -8,5 +8,6 @@ public interface EmployeeRepo {
 	
 	boolean saveEmployee(Employee employee);
 	List<Employee> findByName(String name);
+	Employee searchEmployee(int empID);
 
 }

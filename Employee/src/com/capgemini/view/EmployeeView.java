@@ -1,5 +1,8 @@
 package com.capgemini.view;
 
+
+import java.util.LinkedList;
+
 import com.capgemini.beans.Address;
 import com.capgemini.beans.City;
 import com.capgemini.beans.Country;
@@ -19,16 +22,29 @@ public class EmployeeView {
 		
 		
 		
-		System.out.println(employeeService.createEmployee(101, "ABC", new Address("D 24",new Country("INDIA",new City("Delhi")))));
-		System.out.println(employeeService.createEmployee(102, "BCD", new Address("D 25",new Country("NEPAL",new City("Kathmandu")))));
-		System.out.println(employeeService.createEmployee(103, "CDE", new Address("D 26",new Country("USA",new City("New York")))));
-	 System.out.println(employeeService.createEmployee(104, "DEF", new Address("D 27",new Country("CHINA",new City("Bejing")))));
-		System.out.println(employeeService.createEmployee(105, "EFG", new Address("D 28",new Country("JAPAN",new City("Tokyo")))));
+//		System.out.println(employeeService.createEmployee(101, "ABC", new Address("D 24",new Country("INDIA",new City("Delhi")))));
+//		System.out.println(employeeService.createEmployee(102, "BCD", new Address("D 25",new Country("NEPAL",new City("Kathmandu")))));
+//		System.out.println(employeeService.createEmployee(103, "CDE", new Address("D 26",new Country("USA",new City("New York")))));
+//		System.out.println(employeeService.createEmployee(104, "DEF", new Address("D 27",new Country("CHINA",new City("Bejing")))));
+//		System.out.println(employeeService.createEmployee(105, "EFG", new Address("D 28",new Country("JAPAN",new City("Tokyo")))));
+		
+		employeeService.createEmployee(101, "ABC", new Address("D 24",new Country("INDIA",new City("Delhi"))));
+		employeeService.createEmployee(102, "ABC", new Address("D 25",new Country("NEPAL",new City("Kathmandu"))));
+		employeeService.createEmployee(103, "CDE", new Address("D 26",new Country("USA",new City("New York"))));
+		employeeService.createEmployee(104, "DEF", new Address("D 27",new Country("CHINA",new City("Bejing"))));
+		employeeService.createEmployee(105, "EFG", new Address("D 28",new Country("JAPAN",new City("Tokyo"))));
 		
 		
-		System.out.println(employeeRepo.findByName("ABC"));
 		
-
+		
+		LinkedList<Employee> listOP=(LinkedList<Employee>) employeeService.searchByName("ABC");
+		
+		
+		for(int i=0;i<listOP.size();i++)
+		{
+			System.out.println(listOP.get(i));
+		}	
+		
 	}
 
 }
