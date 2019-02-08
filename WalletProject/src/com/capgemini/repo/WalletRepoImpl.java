@@ -21,6 +21,7 @@ public class WalletRepoImpl implements WalletRepo {
 				return false;
 		
 		userData.put(customer.getMobileNumber(), customer);
+	
 		return true;
 	}
 
@@ -32,11 +33,12 @@ public class WalletRepoImpl implements WalletRepo {
 		while(dataTrav.hasNext())
 		{
 			Map.Entry<String, Customer> data=(Map.Entry<String, Customer>)dataTrav.next();
-				if(data.getValue().getMobileNumber()==mobileNumber)
+				if(data.getValue().getMobileNumber().equals(mobileNumber))
 					return data.getValue();
 		}			
 		
-		return null;
+		
+			return null;
 	}
 
 }
