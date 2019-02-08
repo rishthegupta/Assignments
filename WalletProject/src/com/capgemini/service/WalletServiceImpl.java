@@ -7,27 +7,37 @@ import java.util.List;
 import com.capgemini.beans.Customer;
 import com.capgemini.beans.Transactions;
 import com.capgemini.beans.Wallet;
+import com.capgemini.exception.FieldCannotBeNullException;
+import com.capgemini.exception.InsufficientBalanceException;
+import com.capgemini.exception.MobileNumberAlreadyExistsException;
+import com.capgemini.exception.PhoneNumberDoesNotExistException;
 import com.capgemini.repo.WalletRepo;
 
 
 
 
-public class WalletServiceImpl implements WalletService {
+
+public class WalletServiceImpl implements WalletService  {
 	
 	static int transactionID=1;
-	WalletRepo walletrepo;
+	WalletRepo walletRepo;
 	
 	// Constructor
-	public WalletServiceImpl(WalletRepo walletrepo) {
+	public WalletServiceImpl(WalletRepo walletRepo) {
 		super();
-		this.walletrepo = walletrepo;
+		this.walletRepo = walletRepo;
 	}
 
 	
 	// OVERRIDDEN METHODS
 	@Override
-	public Customer createAccount(String name, String mobileNumber, BigDecimal amount) {
+	public Customer createAccount(String name, String mobileNumber, BigDecimal amount) throws FieldCannotBeNullException, MobileNumberAlreadyExistsException {
 		
+		
+		if(name==null || mobileNumber==null ||amount==null )
+		{
+			throw new FieldCannotBeNullException();
+		}
 		Wallet wallet=new Wallet();
 		wallet.setBalance(amount);
 		Customer customer =new Customer();
@@ -36,16 +46,16 @@ public class WalletServiceImpl implements WalletService {
 		customer.setMobileNumber(mobileNumber);
 		customer.setWallet(wallet);
 		
-		if(walletrepo.save(customer))
+		if(walletRepo.save(customer))
 			return customer;
 		
 		return null;
 	}
 
 	@Override
-	public Customer showBalance(String mobileNumber) {
+	public Customer showBalance(String mobileNumber) throws PhoneNumberDoesNotExistException {
 		
-		Customer customer=walletrepo.findCustomer(mobileNumber);
+		Customer customer=walletRepo.findCustomer(mobileNumber);
 		Transactions transaction= new Transactions();
 		
 		transaction.setAmount(customer.getWallet().getBalance());
@@ -57,9 +67,9 @@ public class WalletServiceImpl implements WalletService {
 	}
 
 	@Override
-	public Customer depositAmount(String mobileNumber, BigDecimal amount) {
+	public Customer depositAmount(String mobileNumber, BigDecimal amount) throws PhoneNumberDoesNotExistException {
 		
-		Customer customer=walletrepo.findCustomer(mobileNumber);
+		Customer customer=walletRepo.findCustomer(mobileNumber);
 		if(customer==null)
 		{
 			System.out.println(customer);
@@ -79,9 +89,15 @@ public class WalletServiceImpl implements WalletService {
 	}
 
 	@Override
-	public Customer withdrawAmount(String mobileNumber, BigDecimal amount) {
+	public Customer withdrawAmount(String mobileNumber, BigDecimal amount) throws InsufficientBalanceException, PhoneNumberDoesNotExistException {
 		// TODO Auto-generated method stub
-		Customer customer=walletrepo.findCustomer(mobileNumber);
+		Customer customer=walletRepo.findCustomer(mobileNumber);
+		
+		//Checking Exceptions
+		if(customer.getWallet().getBalance().compareTo(amount)==-1)
+		{
+			throw new InsufficientBalanceException();
+		}
 		
 		customer.getWallet().setBalance(customer.getWallet().getBalance().subtract(amount));
 		
@@ -97,10 +113,16 @@ public class WalletServiceImpl implements WalletService {
 	}
 
 	@Override
-	public Customer fundTransfer(String sourceMobileNumber, String targetMobileNumber, BigDecimal amount) {
+	public Customer fundTransfer(String sourceMobileNumber, String targetMobileNumber, BigDecimal amount) throws InsufficientBalanceException, PhoneNumberDoesNotExistException {
 		// TODO Auto-generated method stub
-		Customer customer1=walletrepo.findCustomer(sourceMobileNumber);
-		Customer customer2=walletrepo.findCustomer(targetMobileNumber);
+		Customer customer1=walletRepo.findCustomer(sourceMobileNumber);
+		Customer customer2=walletRepo.findCustomer(targetMobileNumber);
+		
+		//Checking Exception
+		if(customer1.getWallet().getBalance().compareTo(amount)==-1)
+		{
+			throw new InsufficientBalanceException();
+		}
 		
 		customer1.getWallet().setBalance(customer1.getWallet().getBalance().subtract(amount));
 		customer2.getWallet().setBalance(customer2.getWallet().getBalance().add(amount));
@@ -125,9 +147,9 @@ public class WalletServiceImpl implements WalletService {
 	}
 
 	@Override
-	public List<Transactions> showTransactions(String mobileNumber) {
+	public List<Transactions> showTransactions(String mobileNumber) throws PhoneNumberDoesNotExistException {
 		
-		return walletrepo.findCustomer(mobileNumber).getL();
+		return walletRepo.findCustomer(mobileNumber).getL();
 	}
 	
 	
